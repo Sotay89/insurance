@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Maratones para el Retiro</title>
+    <!-- Enlace a Tailwind CSS para un estilo rápido y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de Tailwind para usar la fuente Inter y redondeo en todos los elementos -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Asegura que todos los elementos tengan esquinas redondeadas por defecto */
+        * {
+            border-radius: 0.5rem; /* Tailwind's rounded-lg equivalent */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Contenedor principal de la aplicación -->
+    <div class="bg-white p-8 shadow-xl rounded-lg max-w-2xl w-full text-center space-y-6">
+        <h1 class="text-4xl font-extrabold text-gray-800 mb-4">Calcula Cuántos Maratones Necesitas Correr para tu Retiro Ideal</h1>
+        <p class="text-lg text-gray-600 mb-6">¿Alguna vez te has preguntado cuántos kilómetros (y sudor) se necesitan para alcanzar ese retiro soñado? ¡Con nuestra divertida herramienta, podrás tener una idea aproximada de cuántos maratones podrías necesitar correr para llegar allí!</p>
+
+        <!-- Grupo de entrada para la edad -->
+        <div class="input-group text-left mb-4">
+            <label for="edad" class="block text-gray-700 text-sm font-bold mb-2">¿Cuántos años tienes?</label>
+            <input type="number" id="edad" min="1" value="30" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <!-- Grupo de entrada para los años corriendo -->
+        <div class="input-group text-left mb-6">
+            <label for="anosCorriendo" class="block text-gray-700 text-sm font-bold mb-2">¿Cuántos años llevas corriendo (o caminando rápido si eres más de maratones de sillón)?</label>
+            <input type="number" id="anosCorriendo" min="0" value="5" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <!-- Botón para calcular -->
+        <button id="calcularBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg text-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+            ¡Calcula mis Maratones!
+        </button>
+
+        <!-- Sección de resultado -->
+        <div class="resultado bg-blue-50 p-6 rounded-lg border border-blue-200 mt-8">
+            <h2 class="text-2xl font-semibold text-blue-800 mb-3">¡Tu Estimación Fun-tástica!</h2>
+            <p id="resultadoTexto" class="text-xl font-bold text-blue-700">Ingresa tus datos y haz clic en el botón para ver tu resultado.</p>
+        </div>
+
+        <!-- Sección de contacto -->
+        <div class="contacto bg-gray-50 p-6 rounded-lg border border-gray-200 mt-8">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-3">¿Quieres un cálculo real y personalizado?</h3>
+            <p class="text-gray-600 mb-4">Sabemos que esto es solo por diversión. Si estás listo para planificar tu <strong class="text-purple-600">retiro de verdad</strong> y quieres un cálculo financiero preciso que te ayude a alcanzar tus metas, ¡estamos aquí para ayudarte!</p>
+            <!-- Enlace actualizado con los datos de contacto de Ing. Luis Soto -->
+            <a href="mailto:luisoto89@gmail.com?subject=Consulta%20sobre%20plan%20de%20retiro%20ideal%20-%20Contacto%20desde%20Calculadora&body=Hola%20Ing.%20Luis%20Soto,%0D%0AMe%20interesa%20un%20plan%20de%20retiro%20real.%0D%0AQuisiera%20saber%20mas%20informacion.%0D%0AWhatsApp%20de%20Luis%20Soto:%2055%201687%206351" class="contact-button bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md inline-block">
+                ¡Contáctame para un Plan de Retiro Real!
+            </a>
+        </div>
+
+        <!-- Nota de descargo de responsabilidad -->
+        <p class="nota text-xs text-gray-500 mt-6">
+            <strong class="font-bold">Nota:</strong> Esta herramienta es puramente para fines de entretenimiento y no debe tomarse como un consejo financiero. Para una planificación de retiro seria y personalizada, consulta a un profesional.
+        </p>
+    </div>
+
+    <!-- script.js: Lógica de la calculadora -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Obtener referencias a los elementos HTML
+            const edadInput = document.getElementById('edad');
+            const anosCorriendoInput = document.getElementById('anosCorriendo');
+            const calcularBtn = document.getElementById('calcularBtn');
+            const resultadoTexto = document.getElementById('resultadoTexto');
+
+            // Añadir un listener al botón de calcular
+            calcularBtn.addEventListener('click', () => {
+                // Obtener los valores de los campos de entrada y convertirlos a números enteros
+                const edad = parseInt(edadInput.value);
+                const anosCorriendo = parseInt(anosCorriendoInput.value);
+
+                // Validaciones básicas para asegurar que los valores son números válidos
+                if (isNaN(edad) || edad <= 0) {
+                    resultadoTexto.textContent = "Por favor, ingresa una edad válida (un número mayor que 0).";
+                    resultadoTexto.classList.remove('text-blue-700'); // Eliminar clase de color anterior
+                    resultadoTexto.classList.add('text-red-500'); // Añadir clase de color de error
+                    return; // Detener la ejecución si la validación falla
+                }
+                if (isNaN(anosCorriendo) || anosCorriendo < 0) {
+                    resultadoTexto.textContent = "Por favor, ingresa los años corriendo válidos (un número igual o mayor que 0).";
+                    resultadoTexto.classList.remove('text-blue-700');
+                    resultadoTexto.classList.add('text-red-500');
+                    return;
+                }
+
+                // Nuestra "Fórmula Secreta" divertida para el cálculo de maratones
+                // Estos factores pueden ajustarse para cambiar la sensibilidad de la fórmula
+                const factorEdad = 0.6; // La edad tiene un peso del 60%
+                const factorCorriendo = 0.4; // Los años corriendo tienen un peso del 40%
+
+                // Generar un factor aleatorio para hacer el resultado más "divertido" y variable
+                // Math.random() genera un número entre 0 (inclusive) y 1 (exclusive)
+                // Multiplicamos por (max - min) + min para obtener un rango deseado
+                const factorAleatorio = Math.random() * (5 - 1) + 1; // Un número aleatorio entre 1 y 5
+
+                // Calcular los maratones necesarios
+                let maratonesNecesarios = ((edad * factorEdad) + (anosCorriendo * factorCorriendo)) * factorAleatorio;
+
+                // Redondear el resultado hacia arriba al número entero más cercano,
+                // ya que no se puede correr una fracción de maratón
+                maratonesNecesarios = Math.ceil(maratonesNecesarios);
+
+                // Asegurarse de que el número no sea demasiado bajo o demasiado alto para mantener la diversión
+                if (maratonesNecesarios < 1) maratonesNecesarios = 1; // Mínimo 1 maratón
+                if (maratonesNecesarios > 100) maratonesNecesarios = 100; // Máximo 100 maratones para evitar números gigantes
+
+                // Mostrar el resultado en el elemento de texto
+                resultadoTexto.textContent = `¡Basado en tus datos, podrías necesitar correr aproximadamente ${maratonesNecesarios} maratones para alcanzar tu retiro ideal!`;
+                resultadoTexto.classList.remove('text-red-500'); // Eliminar clase de error si existía
+                resultadoTexto.classList.add('text-blue-700'); // Asegurar el color de éxito
+            });
+
+            // Opcional: Ejecutar el cálculo al cargar la página con los valores por defecto
+            // Esto proporciona un resultado inicial al usuario sin que tenga que hacer clic
+            calcularBtn.click();
+        });
+    </script>
+</body>
+</html>
