@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcula Cuánto Vas a Vivir</title>
+    <!-- Enlace a Tailwind CSS para un estilo rápido y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de Tailwind para usar la fuente Inter y redondeo en todos los elementos -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Asegura que todos los elementos tengan esquinas redondeadas por defecto */
+        * {
+            border-radius: 0.5rem; /* Equivalente a rounded-lg de Tailwind */
+        }
+        /* Estilos para el modal personalizado */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente oscuro */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-orange-100 to-amber-300 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Contenedor principal de la aplicación -->
+    <div class="bg-white p-8 shadow-xl rounded-lg max-w-2xl w-full text-center space-y-6">
+        <h1 class="text-4xl font-extrabold text-orange-800 mb-4">Calcula Cuánto Vas a Vivir (¡Según tus kilómetros corridos!)</h1>
+
+        <!-- Espacio para el GIF de corredores -->
+        <div class="mb-6 flex justify-center">
+            <img src= "https://usagif.com/wp-content/uploads/funny-running-gif-48.gif"  alt="Hombre y mujer de mediana edad corriendo" class="rounded-lg shadow-md max-w-full h-auto">
+        </div>
+
+        <p class="text-lg text-gray-700 mb-6">¿Alguna vez te has preguntado si cada paso extra en tu carrera añade un día más a tu vida? ¡Con nuestra divertida herramienta, podrás tener una estimación lúdica de tu esperanza de vida basada en los kilómetros que has corrido!</p>
+
+        <!-- Grupo de entrada para los kilómetros totales -->
+        <div class="input-group text-left mb-6">
+            <label for="totalKm" class="block text-gray-700 text-sm font-bold mb-2">¿Cuántos kilómetros has corrido en total en tu vida (estimado)?</label>
+            <input type="number" id="totalKm" min="0" value="1000" class="shadow appearance-none border border-orange-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500">
+        </div>
+
+        <!-- Botón para calcular -->
+        <button id="calcularBtn" class="bg-amber-500 hover:bg-amber-600 text-orange-800 font-bold py-3 px-6 rounded-lg text-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+            ¡Calcula mi Esperanza de Vida!
+        </button>
+
+        <!-- Sección de resultado -->
+        <div class="resultado bg-orange-50 p-6 rounded-lg border border-orange-200 mt-8">
+            <h2 class="text-2xl font-semibold text-orange-700 mb-3">¡Tu Estimación Fun-tástica!</h2>
+            <p id="resultadoTexto" class="text-xl font-bold text-orange-600">Ingresa tus kilómetros y haz clic en el botón para ver tu resultado.</p>
+        </div>
+
+        <!-- Sección de contacto -->
+        <div class="contacto bg-amber-50 p-6 rounded-lg border border-amber-200 mt-8">
+            <h3 class="text-2xl font-semibold text-orange-800 mb-3">¿Quieres un plan de vida y retiro real?</h3>
+            <p class="text-gray-700 mb-4">Sabemos que esto es solo por diversión. Si estás listo para planificar tu <strong class="text-orange-700">futuro de verdad</strong> y quieres un cálculo financiero preciso que te ayude a alcanzar tus metas de vida y retiro, ¡estamos aquí para ayudarte!</p>
+            <!-- Botón que ahora abrirá el modal en lugar de un mailto directo -->
+            <button id="contactBtn" class="bg-orange-700 hover:bg-orange-800 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md inline-block">
+                ¡Contáctame para un Plan de Vida Real!
+            </button>
+        </div>
+
+        <!-- Nota de descargo de responsabilidad -->
+        <p class="nota text-xs text-gray-500 mt-6">
+            <strong class="font-bold">Nota:</strong> Esta herramienta es puramente para fines de entretenimiento y no debe tomarse como un consejo médico o financiero. Para una planificación seria, consulta a un profesional.
+        </p>
+    </div>
+
+    <!-- Modal personalizado para solicitar datos de contacto -->
+    <div id="contactModal" class="modal-overlay fixed inset-0 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-8 rounded-lg shadow-2xl max-w-md w-full text-center space-y-6 relative">
+            <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
+            <h2 class="text-2xl font-semibold text-orange-800 mb-4">¡Déjanos tus datos para contactarte!</h2>
+            <p class="text-gray-700 mb-6">Para que el Ing. Luis Soto pueda contactarte, por favor, ingresa tu nombre y número de celular.</p>
+
+            <div class="input-group text-left mb-4">
+                <label for="modalName" class="block text-gray-700 text-sm font-bold mb-2">Tu Nombre:</label>
+                <input type="text" id="modalName" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Ej. Juan Pérez">
+            </div>
+
+            <div class="input-group text-left mb-6">
+                <label for="modalPhone" class="block text-gray-700 text-sm font-bold mb-2">Tu Celular:</label>
+                <input type="tel" id="modalPhone" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Ej. 5512345678">
+            </div>
+
+            <p id="modalErrorText" class="text-red-500 text-sm mb-4 hidden">Por favor, completa todos los campos.</p>
+
+            <button id="submitModalBtn" class="bg-orange-700 hover:bg-orange-800 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                Enviar Datos
+            </button>
+        </div>
+    </div>
+
+    <!-- script.js: Lógica de la calculadora y el modal -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Referencias a elementos de la calculadora
+            const totalKmInput = document.getElementById('totalKm');
+            const calcularBtn = document.getElementById('calcularBtn');
+            const resultadoTexto = document.getElementById('resultadoTexto');
+
+            // Referencias a elementos del modal
+            const contactBtn = document.getElementById('contactBtn');
+            const contactModal = document.getElementById('contactModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const modalNameInput = document.getElementById('modalName');
+            const modalPhoneInput = document.getElementById('modalPhone');
+            const submitModalBtn = document.getElementById('submitModalBtn');
+            const modalErrorText = document.getElementById('modalErrorText');
+
+            // Lógica para la calculadora de esperanza de vida
+            calcularBtn.addEventListener('click', () => {
+                const totalKm = parseInt(totalKmInput.value);
+
+                if (isNaN(totalKm) || totalKm < 0) {
+                    resultadoTexto.textContent = "Por favor, ingresa una cantidad válida de kilómetros (un número igual o mayor que 0).";
+                    resultadoTexto.classList.remove('text-orange-600');
+                    resultadoTexto.classList.add('text-red-500');
+                    return;
+                }
+
+                const baseVida = 75;
+                const factorKm = 0.005;
+                const variacionAleatoria = (Math.random() - 0.5) * 10;
+
+                let esperanzaDeVida = baseVida + (totalKm * factorKm) + variacionAleatoria;
+
+                if (esperanzaDeVida < 60) esperanzaDeVida = 60;
+                if (esperanzaDeVida > 100) esperanzaDeVida = 100;
+
+                esperanzaDeVida = Math.round(esperanzaDeVida);
+
+                resultadoTexto.textContent = `¡Basado en tus kilómetros, tu esperanza de vida estimada es de aproximadamente ${esperanzaDeVida} años! ¡Sigue corriendo!`;
+                resultadoTexto.classList.remove('text-red-500');
+                resultadoTexto.classList.add('text-orange-600');
+            });
+
+            // Ejecutar el cálculo inicial al cargar la página
+            calcularBtn.click();
+
+            // Lógica para el modal de contacto
+            contactBtn.addEventListener('click', () => {
+                contactModal.classList.remove('hidden'); // Mostrar el modal
+                modalErrorText.classList.add('hidden'); // Ocultar cualquier mensaje de error previo
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                contactModal.classList.add('hidden'); // Ocultar el modal
+                modalNameInput.value = ''; // Limpiar campos
+                modalPhoneInput.value = '';
+                modalErrorText.classList.add('hidden'); // Ocultar error
+            });
+
+            submitModalBtn.addEventListener('click', () => {
+                const userName = modalNameInput.value.trim();
+                const userPhone = modalPhoneInput.value.trim();
+
+                if (userName === '' || userPhone === '') {
+                    modalErrorText.textContent = 'Por favor, ingresa tu nombre y número de celular.';
+                    modalErrorText.classList.remove('hidden'); // Mostrar mensaje de error
+                    return;
+                } else {
+                    modalErrorText.classList.add('hidden'); // Ocultar mensaje de error
+                }
+
+                // Construir el asunto y cuerpo del correo con los datos del usuario
+                const subject = encodeURIComponent("Consulta sobre plan de vida y retiro - Contacto desde Calculadora");
+                const body = encodeURIComponent(
+                    `Hola Ing. Luis Soto,\n\n` +
+                    `Me interesa un plan de vida y retiro real.\n` +
+                    `Quisiera saber más información.\n\n` +
+                    `Mi nombre es: ${userName}\n` +
+                    `Mi celular es: ${userPhone}\n\n` +
+                    `WhatsApp de Luis Soto: 55 1687 6351`
+                );
+
+                // Crear el enlace mailto y abrirlo
+                const mailtoLink = `mailto:luisoto89@gmail.com?subject=${subject}&body=${body}`;
+                window.location.href = mailtoLink;
+
+                // Ocultar el modal después de enviar
+                contactModal.classList.add('hidden');
+                modalNameInput.value = ''; // Limpiar campos
+                modalPhoneInput.value = '';
+            });
+        });
+    </script>
+</body>
+</html>
